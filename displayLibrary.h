@@ -1,12 +1,13 @@
-/** @file displayLibrary.h
- * @author Josh Helzerman
+/** 
+ * @file displayLibrary.h
+ * @author Alex Lambert
  *
  * Description:
- *   - Command for library manager. displays all books in library, sorted
+ *   - Displays all books in the library, sorted
  *
- * Implementation
- *   - inherits from Command interface.
- *   - displays all books in library in sorted order
+ * Assumptions/Implementation:
+ *   - Inherits from Command interface
+ *   - Doesn't need to use the patronDatabase
  */
 
 #ifndef DISPLAYLIBRARY_H
@@ -14,45 +15,61 @@
 
 #include "bookDatabase.h"
 #include "libraryCommand.h"
-#include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 using namespace std;
 
 class DisplayLibrary : public LibraryCommand {
 public:
-    // -------------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** DisplayLibrary()
-    * Default Constructor
-    *
-    * Constructs a display library command object with default values
-    * @pre None.
-    * @post DisplayLibrary command object exists
-    */
+     * Default Constructor
+     *
+     * Constructs a base instance of the display library command. This 
+     * instance must not be executed.
+     * @param bookDB is the BookDatabase to be displayed
+     * @pre None
+     * @post DisplayLibrary command object exists for bookDB
+     */
     DisplayLibrary(BookDatabase* bookDB);
 
+    //-----------------------------------------------------------------------
+    /** ~DisplayLibrary()
+     * Default Destructor
+     *
+     * Destroys this command
+     * @pre None
+     * @post Deallocates memory used by this command.
+     */
     virtual ~DisplayLibrary();
 
-    // -------------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** execute()
-    * Execute display library command
-    *
-    * Prints all books in library in sorted order
-    * @pre The library object should have books inputed
-    * @post None. library is unchanged
-    */
+     * Execute DisplayLibrary Command
+     *
+     * Prints all books in library in sorted order
+     * @pre None
+     * @post None. Library is unchanged
+     */
     virtual void execute();
 
+    //-----------------------------------------------------------------------
     /** create()
-    * Create Library Command (factory)
-    *
-    * Create a library command of the appropriate type
-    * this function is pure virtual
-    * @pre None
-    * @post a new library command exists
-    */
-    virtual LibraryCommand* create(ifstream& parameters) const;
+     * Create DisplayLibrary Command (factory)
+     *
+     * Creates a DisplayLibrary command that can be executed
+     * @param parameters is a reference to the ifstream, starting immediately 
+     * after the command code
+     * @pre None
+     * @post No changes, just returns the new command. Parameters will read up 
+     * until and including the end-of-line character
+     * @return returns the new executable command, or nullptr if the
+     * parameters were invalid
+     */
+    virtual LibraryCommand* create(stringstream& parameters) const;
 };
 
 #endif

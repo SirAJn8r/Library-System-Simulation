@@ -1,72 +1,91 @@
-/** @file patronDatabase.h
- *  @author Mogul Solutions
+/** 
+ * @file patronDatabase.h
+ * @author Alex Lambert
  *
  * Description:
- *   - Patron database is a database that holds all the patrons that will be 
- *     interacting with the library. The class allows you to create new patrons
- *     and retrieve a patron based on the Patron object that you pass in
+ *   - PatronDatabase holds all of the patrons for a library
+ *   - It can retrieve patrons and insert patrons
+ *   - There is no functionality for removing patrons from the database
  *
- * 
+ * Assumptions/Implementation:
+ *   - Creates patrons based on the string, which can only have 1 format
+ *   - Uses a BSTree to store the patrons
  */
+
 #ifndef PATRONDATABASE_H
 #define PATRONDATABASE_H
 
 #include "BSTree.h"
 #include "patron.h"
+#include <iostream>
+#include <sstream>
 #include <string>
 
 class PatronDatabase {
 public:
-    // -------------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** PatronDatabase()
-    * Default Constructor
-    *
-    * Constructs a PatronDatabase object with default values
-    * 
-    * @pre None.
-    * @post PatronDatabase object exists
-    */
+     * Default Constructor
+     *
+     * Constructs an empty PatronDatabase
+     * @pre None
+     * @post PatronDatabase is initialized with a BSTree for Patrons
+     */
     PatronDatabase();
 
-    // -------------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** ~PatronDatabase()
-    * Default Destructor
-    *
-    * Destroys the Patron database
-    * @pre None.
-    * @post Deallocates all memory in the patron database
+     * Default Destructor
+     *
+     * Destroys the PatronDatabase and every item inside it
+     * @pre None
+     * @post All memory used by the PatronDatabase and its parts is
+     * deallocated
     */
-    ~PatronDatabase();
+    virtual ~PatronDatabase();
 
-    //--------------------------------------------------------------------------
-    /** createPatron(Patron customer)
-    * createPatron
-    *
-    * Creates a patron based on the contentse of the given customer
-    * @param customer a patron to be created
-    * @pre None
-    * @post customer is created as a Patron object
-    * @return true if it was successfully created
-    */
-    bool insertPatron(string patronID);
+    //-----------------------------------------------------------------------
+    /** insertPatron()
+     * Insert Patron Function
+     *
+     * Inserts the given Patron into the BSTree
+     * @param patronInfo is a string holding the new patron's ID and name
+     * @pre patronInfo is properly formatted
+     * @post the new patron is added, if the Patron is valid
+     * @return if the patron was successfully inserted
+     */
+    bool insertPatron(string patronInfo);
 
-    //--------------------------------------------------------------------------
-    /** getPatron(String patronId)
-    * 
-    * Return a Patron object based on the information that is passed in
-    * 
-    * @pre None.
-    * @post None. const function
-    * @return Patron* representing the Patron object that they are looking for if found
-    */
-    Patron* getPatron(string patronID) const;
+    //-----------------------------------------------------------------------
+    /** getPatron()
+     * Get Patron Function
+     * 
+     * Return a Patron object based on the information that is passed in if 
+     * it is in a BSTree
+     * @param patronInfo is a string holding the patron's ID that you're 
+     * searching for
+     * @pre patronInfo is properly formatted
+     * @post None. No changes made
+     * @return Pointer to the Patron object that they are looking for, if it
+     * wasn't found, returns nullptr.
+     */
+    Patron* getPatron(string patronInfo) const;
 
 private:
-    //the variable below is a class member variable
-    //this is a BST of patrons
-    BSTree* patronBST;
+    //-----------------------------------------------------------------------
+    /** createPatron()
+     * Create Patron Function
+     * 
+     * Creates a patron based on patronInfo
+     * @param patronInfo is a string holding the patron's ID and name
+     * @pre patronInfo is properly formatted
+     * @post None
+     * @return Pointer to the new Patron, or nullptr if it was invalid
+     */
+    Patron* createPatron(string patronInfo) const;
 
-    Patron* createPatron(string patronID) const;
+    // BSTree that holds all the patrons
+    BSTree* patronBST;
 };
 
 #endif

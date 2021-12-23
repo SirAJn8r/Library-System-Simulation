@@ -1,4 +1,5 @@
-/** @file book.h
+/** 
+ * @file book.h
  * @author Josh Helzerman
  *
  * Description:
@@ -7,15 +8,15 @@
  *   - Can be queried to display its information
  *   - Can be queried to see if there are any available copies
  *   - Can be compared with other books
- *   - number of available books can be changed
+ *   - Number of available books can be changed
  *
  *
- * Implementation:
+ * Assumptions/Implementation:
  *   - This is an abstract class
  *   - Some functions are virtual and some are pure virtual
  *   - One book object can represent multiple copies of the same book using 
  * the count member variable
- *   - count can be decreased or increased
+ *   - Count can be decreased or increased
  */
 
 #ifndef BOOK_H
@@ -29,70 +30,98 @@ using namespace std;
 
 class Patron;
 
-// needs inheritance to BST data. book factory should befriend book for
-// instantiation
 class Book : public BSTData {
 public:
-    // -----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** recieveBook()
-    * Add a copy of the book to the collection
-    *
-    * Adds 1 to the count of the book, representing a copy of the book
-    * has been returned
-    * @pre None.
-    * @post count is incremented
-    */
+     * Add Copy of Book
+     *
+     * Adds 1 to the count of the book if the patron is eligible to return a 
+     * copy
+     * @param patron is the patron returning the book
+     * @pre Patron isn't a nullptr
+     * @post count is incremented if the patron doesn't currently has a copy
+     * @return if the book was successfully returned
+     */
     bool receiveBook(Patron* patron);
 
-    // -----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** giveBook()
-    * Remove a book from collection
-    *
-    * Subtracts 1 from count variable of book, a copy of the book has been
-    * checked out.
-    * @pre must have a copy of the book available. count > 0
-    * @post count--
-    * @return true if book was available, false otherwise
-    */
+     * Subtract Copy of Book
+     *
+     * Subtracts 1 from count of the book if it is available for the patron
+     * to check out
+     * @param patron is the patron checking out the book
+     * @pre must have a copy of the book available. count > 0
+     * @post count is decremented if the patron can check out a copy
+     * @return true if book was available, false otherwise
+     */
     bool giveBook(Patron* patron);
 
-    // -----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** checkAvailability()
-    * Check if book is avaiable
-    *
-    * Checks if a copy of the book is available for patron to checkout
-    * @pre None.
-    * @post None. Const Function
-    * @return If the patron can check out the book
-    */
+     * Check if Book is Avaiable
+     *
+     * Checks if a copy of the book is available for patron to checkout
+     * @param patron is the patron checking out the book
+     * @pre patron isn't a nullptr
+     * @post None. Const Function
+     * @return If the patron can check out the book
+     */
     bool checkAvailability(Patron* patron) const;
 
-    // -----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** displayBook()
-    * Display book information
-    *
-    * Display book information in easy-to-read columns.
-    * Displayed in order: Title, author, type, month & year published
-    * Virtual function, can be overridden
-    * @pre None.
-    * @post None. Const Function
-    * @return None
-    */
+     * Display book information
+     *
+     * Display book information in easy-to-read columns.
+     * Pure virtual, each book type must implement
+     * @pre None.
+     * @post None. Const Function
+     */
     virtual void display() const = 0;
 
-    // -----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
+    /** displayForPatron()
+     * Display book information
+     *
+     * Display book information in easy-to-read columns for patron history
+     * Virtual function, can be overridden
+     * @pre None.
+     * @post None. const function
+     */
+    virtual void displayForPatron() const = 0;
+
+    //-----------------------------------------------------------------------
+    /** getTitle()
+     * Get Ttile
+     *
+     * Returns the title of the book
+     * @pre Book type uses the title
+     * @post None. const function
+     * @return the title, or some other signifier if the book type 
+     * doesn't use titles
+     */
+    virtual string getTitle() const;
+
+    //-----------------------------------------------------------------------
     /** create()
-    * Create book (for factory)
-    *
-    * Creates a book instance
-    * @pre None
-    * @post new book object exists
-    * @return reference to new children's book
-    *
-    */
-    virtual Book* create(stringstream& parameters) const = 0;
+     * Create Book
+     *
+     * Creates a book based on bookString
+     * @param bookString stores the info about the book to be fetched
+     * @param altString represents if the book string is formatted in the
+     * normal or alternative format
+     * @pre bookString is properly formatted as per the formatting type
+     * @post None. No changes made.
+     * @return Book pointer to the new book, nullptr if it failed
+     */
+    virtual Book* create(stringstream& parameters, bool altString = false)
+        const = 0;
 
 protected:
+    // Deriving classes do not need to use author, title, year, and month
+
     // author of book
     string author;
 
@@ -108,13 +137,10 @@ protected:
     // copies of book available
     int count;
 
-    // Total number of books available
+    // Total number of copies in this library
     int maxCount;
 
-    // format of book
-    char format;
-
-    // current patrons checking out the book. max size is maxCount
+    // array of current patrons checking out the book. max size is maxCount
     Patron** checkouts;
 };
 

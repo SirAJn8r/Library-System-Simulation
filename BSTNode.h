@@ -1,16 +1,15 @@
-/** @file BSTNode.h
- *  @author Joseph Collora
+/** 
+ * @file BSTNode.h
+ * @author Alex Lambert
  * 
- *  Description:
- *  - Node object that exists within the Binary Search trees
- *  - Keeps track of the left and right children of the current instance
- *  - Stores an object with the BSTData interface as the "data"
- *  - Includes no funcitons
+ * Description:
+ *   - BSTNode keeps a left and right branch, and holds a BSTData item
+ *   - Meant to be used inside a Binary Search Tree
+ *   - Includes no funcitons
  * 
- *  Implementation:
- *  - Left BSTNode defaults to nullptr
- *  - Right BSTNode defaults to nullptr
- *  - Data is of 'BSTData' type
+ * Assumptions/Implementation:
+ *   - Left BSTNode and right BSTNode default to 
+ *   - When deleting, it deletes its left/right branches first
  */
 
 #ifndef BSTNODE_H
@@ -22,16 +21,30 @@ using namespace std;
 
 class BSTNode {
 public:
-    BSTNode();
-
+    //-----------------------------------------------------------------------
+    /** BSTNode()
+     * Default Constructor
+     *
+     * Constructs an BSTNode containing data
+     * @pre None
+     * @post BSTNode is initialized with no left/right subtree
+     */
     BSTNode(BSTData* data);
 
+    //-----------------------------------------------------------------------
+    /** ~BSTNode()
+     * Default Destructor
+     *
+     * Destroys the BSTNode, its left/right subtrees, and its data item
+     * @pre None
+     * @post All memory used by the BSTNode and its parts is deallocated
+     */
     virtual ~BSTNode();
 
-    // Pointer to left child
+    // Pointer to left branch
     BSTNode* left;
 
-    // Pointer to right child
+    // Pointer to right branch
     BSTNode* right;
 
     // Pointer to the data object

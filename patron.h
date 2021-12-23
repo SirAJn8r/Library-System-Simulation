@@ -1,12 +1,14 @@
-/** @file patron.h
+/** 
+ * @file patron.h
  * @author Alex Lambert
  *
  * Description:
- *   - 
- *
+ *   - Patrons have an ID, a name, and can have books checked out to them
+ *   - Has few functions, primarily controlling their history
  *
  * Implementation/Assumptions:
- *   - 
+ *   - Implements the BSTData interface
+ *   - Compare to each other using ID, name is irrelevant
  */
 
 #ifndef PATRON_H
@@ -22,17 +24,17 @@ using namespace std;
 
 class Patron : public BSTData {
 public:
-    // -------------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** Patron()
     * Default Constructor
     *
-    * Creates a new blank patron object 
+    * Creates a new patron object 
     * @pre None.
-    * @post Book object exists with default member variables
+    * @post Patron object exists with the given ID and name
     */
     Patron(int ID, string name);
 
-    // -------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     /** ~Patron()
     * Default Destructor
     *
@@ -40,46 +42,65 @@ public:
     * @pre None.
     * @post Deallocates all memory in this patron
     */
-    ~Patron();
+    virtual ~Patron();
 
-    // -------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     /** addBook()
-    * Check out Book
+    * Check Out Book
     *
-    * Checks out the book to the patron if it can, and adds it to its history
-    * @pre A patron can't check out a book it already has
-    * @post currentBooks and bookHistory will both include the book
-    * @return if the book was successfully checked out
+    * Checks out a book to the patron
+    * @param book is the book the Patron is checking out
+    * @pre The book can and has been checked out to the Patron
+    * @post History will include this checkout
     */
     virtual void addBook(Book* book);
 
-    // -------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     /** returnBook()
     * Return Book 
     *
-    * Removes the book from the patron's current books, if it can
-    * @pre A patron can't return a book they don't have
-    * @post The patron will not be currently checking out the book
-    * @return true if book was available, false otherwise
+    * Returns the book from the patron 
+    * @param book is the book the Patron is return
+    * @pre The book can and has been returned by the Patron
+    * @post History will include this return
     */
     virtual void returnBook(Book* book);
 
-    // -------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     /** display()
-    * Display book information
+    * Display Patron Information
     *
-    * Display book information in easy-to-read columns.
-    * Displayed in order: Title, author, type, month published, year published
-    * Virtual function, can be overridden
+    * Display patron information / history in easy-to-read columns.
     * @pre None.
     * @post None. const function
-    * @return String representing book data
     */
     virtual void display() const;
 
+    //------------------------------------------------------------------------
+    /** getName()
+    * Get Name
+    *
+    * Return the name of the patron
+    * @pre None.
+    * @post None. const function
+    * @return the name variable
+    */
+    virtual string getName() const;
+
 protected:
+    //-----------------------------------------------------------------------
+    /** getComp()
+     * Get Comparison
+     * 
+     * Returns the comparison value of this and rhs
+     * @pre Both items are of the same type
+     * @post None, no changes
+     * @return -1 if this is smaller, 0 if equivalent, 1 is this is bigger
+     */
     virtual int getComp(const BSTData& rhs) const;
 
+    // pastActions have a string representing the action (CheckOut or Return)
+    // and a book involved in the action
     struct pastAction {
         string action;
         Book* book;

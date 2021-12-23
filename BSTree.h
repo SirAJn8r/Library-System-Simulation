@@ -1,17 +1,17 @@
-/** @file BSTree.h
- *  @author Joseph Collora
+/** 
+ * @file BSTree.h
+ * @author Alex Lambert
  * 
- *  Description:
- *  - A binary search tree that exists as a contains BSTData type objects
- *  - Can be used to insert objects into itself
- *  - Can be cleared of all nodes and object
- *  - Can retrieve a pointer to a designated item in the structure
+ * Description:
+ *   - Is a binary search tree of BSTData type objects
+ *   - Can be used to insert objects into itself
+ *   - Can be cleared of all nodes and object
+ *   - Can retrieve a pointer to a designated item in the structure
  * 
- *  Assumptions/Implementation:
- *  - Each binary tree stores one concrete type of item at a time for
- *  comparison (e.g. exclusively fiction books, or exclusively patrons)
- *  - Uses a linked list binary search tree to store the values, containing a
- *  reference to the root node.
+ * Assumptions/Implementation:
+ *   - Each binary tree must store only one concrete type of item at a time
+ * for comparison (e.g. exclusively fiction books, or exclusively patrons)
+ *   - Uses linked BSTNodes to store the values in the tree
  */
 
 #ifndef BSTree_H
@@ -52,6 +52,7 @@ public:
      * 
      * Inserts given object into the current instance of BSTree, returning a
      * bool value indicating the success of the insert
+     * @param data is the new item to be stored
      * @pre data isn't a nullptr.
      * @post data was inserted into the BSTree if the return value is true
      * @return returns true if data exists and no duplicate is found making a
@@ -59,14 +60,13 @@ public:
      */
     bool insert(BSTData* data);
 
-    // Temp function for testing, will be deleted
-    bool insert();
-
     //-----------------------------------------------------------------------
     /** retrieve()
      * BSTree Retrieve Function
      * 
      * Retrieves and returns the BSTData that has the same values as dataCopy
+     * @param dataCopy is an item that returns 0 when compared (getComp) to
+     * the BSTData object to be searched for 
      * @pre dataCopy isn't a nullptr.
      * @post None.
      * @return Returns a pointer to the BSTData equivalent to dataCopy, or
@@ -100,9 +100,13 @@ private:
     /** insertHelper()
      * BSTree Insert Helper Function
      * 
-     * Finds the location to place
-     * @pre None.
-     * @post None.
+     * Finds the location to place the new data item, then does so
+     * @param curr is the current spot in the BSTree to find space for data
+     * @param data is the item to be inserted
+     * @pre curr is initialy root, data isn't a nullptr
+     * @post If data isn't already in the BSTree, it will be inserted into
+     * its spot in the BSTree
+     * @return if the data was successfully inserted
      */
     bool insertHelper(BSTNode*& curr, BSTData* data);
 
@@ -110,9 +114,15 @@ private:
     /** retrieveHelper()
      * BSTree Retrieve Helper Function
      * 
-     * Calls display() on all BSTData objects inside the BSTree in-order
-     * @pre None.
-     * @post None.
+     * Searches the BSTree for where dataCopy should be placed, trying to 
+     * find if there is a BSTData equivalent to it, then returning that.
+     * @param curr is the current spot in the BSTree to look for BSTData
+     * @param dataCopy is its own BSTData object that is equivalent to the 
+     * BSTData object retrieve is searching for
+     * @pre curr is initially root, dataCopy isn't a nullptr
+     * @post None, no changes made.
+     * @return the BSTData object equivalent to dataCopy, nullptr if it 
+     * isn't found
      */
     BSTData* retrieveHelper(BSTNode* curr, const BSTData* dataCopy) const;
 
@@ -121,7 +131,8 @@ private:
      * BSTree Display All Helper Function
      * 
      * Calls display() on all BSTData objects inside the BSTree in-order
-     * @pre None.
+     * @param curr is the current BSTNode in the recursive function
+     * @pre curr is initially root
      * @post None.
      */
     void displayAllHelper(const BSTNode* curr) const;

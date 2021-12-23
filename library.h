@@ -1,12 +1,18 @@
-/** @file bookDatabase.h
- *  @author Mogul Solutions
+/** 
+ * @file bookDatabase.h
+ * @author Alex Lambert
  *
  * Description:
- *      Library class is an object that includes pointers to both the patron and
- *      the book database. The class processes all of the commands that are come
- *      from an input data stream
- *   
- *
+ *   - Library class contains books and patrons, the patrons can do things 
+ * such as checking out or returning the books.
+ *   - There are a few commands that happen to do this checking in and out
+ * of books, and also displaying information about the library.
+ * 
+ * Assumptions/Implmentation:
+ *   - The library should be created by LibraryBuilder so it is properly done.
+ *   - Processes commands by using an ifstream, which should be properly 
+ * formatted.
+ *   - Can process multiple sets of commands if desired
  */
 
 #include "bookDatabase.h"
@@ -18,36 +24,42 @@
 class Library {
 
 public:
-    // -------------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** Library()
     * Default Constructor
     *
-    * Constructs a Library object with default values for the patron database
-    * 
-    * 
+    * Constructs a Library object containing bookDB and patronDB.
+    * @param bookDB is a complete valid bookDatabase
+    * @param patronDB is a complete valid patronDatabase
     * @pre None.
-    * @post Library object exists
+    * @post Library object exists and is initialized
     */
     Library(BookDatabase* bookDB, PatronDatabase* patronDB);
 
+    //-----------------------------------------------------------------------
+    /** ~Library()
+    * Default Destructor
+    *
+    * Destroys the library and everything in it
+    * @pre None.
+    * @post All memory used by everything in the library is deallocated.
+    */
     virtual ~Library();
 
-    // -------------------------------------------------------------------------
+    //-----------------------------------------------------------------------
     /** processComands()
-    *
-    * This method is responsible for processing all of the library commands that
-    * are provided by the ifstream
+    * Process Commands
     * 
-    * @pre None.
-    * @param ifstream an input file stream
-    *                 a stream of data used for reading input from a file
-    * @post commands are executed based on the parameter
+    * Runs all the commands in the commandFile that are legal.
+    * @param commandFile is an input file of the commands to execute.
+    * @pre commandFile is properly formatted.
+    * @post valid legal commands are executed in the library.
     */
     void processCommands(ifstream& commandFile);
 
 private:
-    //this member class is the d-base that holds all of the books for library
+    //acts as a database to hold all of the books for library
     BookDatabase* bookDB;
-    //this memebr class is the d-base that holds all of the patrons for library
+    //acts as a database to hold all of the patrons for library
     PatronDatabase* patronDB;
 };
